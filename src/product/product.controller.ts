@@ -1,4 +1,4 @@
-import { Controller,Get,Post,Res,HttpStatus, Body } from '@nestjs/common';
+import { Controller,Get,Post,Res,HttpStatus, Body, Param, Patch, Delete, Query } from '@nestjs/common';
 import { CreateProductDTO } from './dto/product.dto';
 import { ProductService } from './product.service';
 
@@ -22,5 +22,28 @@ async getProducts(@Res() res){
    return res.status(HttpStatus.OK).json(products);
 
 }
+@Get('/:productId')
+async getProduct(@Res() res,@Param('productId') productId){
+    const product = await this.productService.getProduct(productId);
+    if(!product) return res.status(HttpStatus.OK).json('Product not found');
+    return res.status(HttpStatus.OK).json(product);
 }
-
+@Delete('/delete')
+async deleteProduct(@Res() res,@Query('productId') productId){
+    const product = await this.productService.deleteProduct(productId);
+    if(!product) return res.status(HttpStatus.OK).json('Product not found');
+    return res.status(HttpStatus.OK).json({
+        message:'Product Deleted Successfully',
+        product
+    });
+}
+@Patch('/update')
+async updateProduct(@Res() res,@Body() createProductDTO:CreateProductDTO,@Param('productId') productId){
+    const product = await this.productService.updateProduct(productId,createProductDTO);
+    if(!product) return res.status(HttpStatus.OK).json('Product not found');
+    return res.status(HttpStatus.OK).json({
+        message:'Product Updated Successfully',
+        product
+    });
+}
+}
