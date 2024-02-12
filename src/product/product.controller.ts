@@ -16,12 +16,7 @@ return res.status(HttpStatus.OK).json({
 });
 }
 
-@Get('/')
-async getProducts(@Res() res){
-    const products = await this.productService.getProducts()
-   return res.status(HttpStatus.OK).json(products);
 
-}
 @Get('/:productId')
 async getProduct(@Res() res,@Param('productId') productId){
     const product = await this.productService.getProduct(productId);
